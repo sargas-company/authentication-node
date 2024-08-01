@@ -2,8 +2,6 @@ module.exports = {
   PORT: process.env.PORT || 5001,
   API_KEY: process.env.API_KEY || '',
 
-  CRON_JOB_PERIOD: process.env.CRON_JOB_PERIOD || '0 0 * * *',
-
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'secret',
   ACCESS_TOKEN_LIFETIME: process.env.ACCESS_TOKEN_LIFETIME || '20m',
 

@@ -1,7 +1,9 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const { jwtTokenGen, jwtTokenVerify } = require('../src/helpers/jwt-utils');
+const { generateToken, verifyToken } = require('../src/helpers');
+const { ACCESS_TOKEN_SECRET } = require("../src/config/constants");
+const {RoleEnum, ActionEnum} = require("../src/constants");
 
 const sleep = async (milliseconds) => {
   await new Promise((resolve) => {
@@ -10,28 +12,32 @@ const sleep = async (milliseconds) => {
 };
 
 describe('jwtUtils', () => {
-  it('should generate a valid JWT token with userid 123.', () => {
-    const payload = { userId: '123' };
-    const token = jwtTokenGen(payload, 'secret', '10m');
-    expect(token).to.be.a('string');
-  });
+  it('should generate a valid JWT token with userid 123.', async () => {
+    const user = { userId: '123', role: RoleEnum.USER };
+    const action = ActionEnum.LOGIN;
+    const token = await generateToken({ user, action });
 
-  it('should verify a valid JWT token and userid is same to 123.', async function () {
-    const payload = { userId: '123' };
-    const token = jwtTokenGen(payload, 'secret', '10m');
-    const decodedData = jwtTokenVerify(token, 'secret');
+    expect(token.accessToken).to.be.a('string');
+    expect(token.refreshToken).to.be.a('string');
+  });
+  
+  it('should verify a valid JWT token and userid is same to 123.', async () => {
+    const user = { id: '123', role: RoleEnum.USER };
+    const action = ActionEnum.LOGIN;
+    const { accessToken } = await generateToken({ user, action });
+    const decodedData = await verifyToken(ActionEnum.USER_ACCESS,accessToken);
     expect(decodedData.userId).to.equal('123');
   });
-
-  it('should output jwt expired message.', async function () {
-    const payload = { userId: '123' };
-    const token = jwtTokenGen(payload, 'secret', '1s');
-
+  
+  it('should output jwt expired message.', async  () => {
+    const user = { id: '123', role: RoleEnum.USER };
+    const action = ActionEnum.LOGIN;
+    const { accessToken } = generateToken({ user, action });
     await sleep(1100);
     try {
-      const decodedData = jwtTokenVerify(token, 'secret');
+      await verifyToken(accessToken, ACCESS_TOKEN_SECRET);
     } catch (error) {
-      expect(error.msg).to.equal('jwt expired');
+      expect(error.message).to.equal('jwt expired');
     }
   });
 });

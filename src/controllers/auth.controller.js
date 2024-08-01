@@ -10,7 +10,6 @@ const { verifyToken } = require('../helpers');
 const { ActionEnum } = require('../constants');
 
 /**
-
  @desc This function handles user login and returns access and refresh tokens.
  @return {Object} - Returns access and refresh tokens if the user is authenticated.
  */

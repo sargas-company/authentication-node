@@ -4,8 +4,8 @@ const { ActionEnum } = require('../constants');
 
 /**
  *
- * @desc This function genereates access token and refresh token
- * @param {Object} data object that containing user informations - email, role, ...
+ * @desc This function generates access token and refresh token
+ * @param {Object} data object that containing user information - email, role, ...
  * @returns access and refresh tokens
  */
 async function generateToken(data) {

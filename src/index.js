@@ -1,12 +1,8 @@
 // Import required packages and modules
 const express = require('express');
-const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-
-// Configure dotenv
-dotenv.config();
 
 // Initialize express app
 const app = express();
@@ -22,13 +18,7 @@ const {
 const { apiKeyMiddleware } = require('./middlewares/API');
 
 // Connect to MongoDB database
-connectToDb()
-  .then(() => {
-    console.log('Connected to MongoDB database');
-  })
-  .catch((err) => {
-    console.error('Error connecting to MongoDB database:', err);
-  });
+connectToDb();
 
 // Middleware
 app.use(express.json());

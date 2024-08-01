@@ -3,12 +3,17 @@ const expect = chai.expect;
 const spies = require('chai-spies');
 chai.use(spies);
 
-const constants = require('../src/config/constants');
 const apiKeyMiddleware = require('../src/middlewares/API/api-key.middleware');
 
 describe('apiKeyMiddleware', () => {
+  let apiKey;
+  
+  before(async function() {
+    apiKey = process.env.API_KEY;
+  });
+  
   it('should call next if API key is valid', () => {
-    const req = { get: () => constants.API_KEY };
+    const req = { get: () => apiKey};
     const res = {};
     const next = () => {};
 

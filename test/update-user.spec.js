@@ -11,8 +11,6 @@ describe('User update route', () => {
   let apiKey;
 
   before(async () => {
-    // Load environment variables for testing
-    require('dotenv').config({ path: '.test.env' });
     apiKey = process.env.API_KEY;
 
     // Create a new user to update
@@ -23,8 +21,8 @@ describe('User update route', () => {
       phone: '+1234567890',
       twoFactorAuth: 'optional',
     };
-    const res = await request(app)
-      .post('/users/signUp')
+    await request(app)
+      .post('/users/register')
       .set('x-api-key', apiKey)
       .send(newUser);
 

@@ -4,15 +4,14 @@ const request = require('supertest');
 const app = require('../src');
 const authService = require('../src/services/user.service');
 
-describe('Auth Routes', () => {
-  describe('POST /users/signUp', () => {
+describe('User Routes', function() {
+  describe('POST /users/register', () => {
     let apiKey;
-
-    before(() => {
-      // set API_KEY from environment variable
+    
+    before(async function() {
       apiKey = process.env.API_KEY;
     });
-
+    
     it('should return 201 status and success message when user is created', async () => {
       const newUser = {
         username: 'newuser',
@@ -22,15 +21,16 @@ describe('Auth Routes', () => {
         twoFactorAuth: 'optional',
       };
       const res = await request(app)
-        .post('/users/signUp')
+        .post('/users/register')
         .set('x-api-key', apiKey)
         .send(newUser);
-
+      
       const newUserFromDB = await authService.findOneByParam({
         email: newUser.email,
       });
+      
       await authService.delete(newUserFromDB._id);
-
+      
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('User created successfully');
     });
@@ -44,7 +44,7 @@ describe('Auth Routes', () => {
         twoFactorAuth: 'not valid',
       };
       const res = await request(app)
-        .post('/users/signUp')
+        .post('/users/register')
         .set('x-api-key', apiKey)
         .send(invalidUser);
 
@@ -63,7 +63,7 @@ describe('Auth Routes', () => {
       const existingUserFromDb = await authService.create(existingUser);
 
       const res = await request(app)
-        .post('/users/signUp')
+        .post('/users/register')
         .set('x-api-key', apiKey)
         .send(existingUser);
 

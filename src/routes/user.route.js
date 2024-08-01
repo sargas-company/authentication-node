@@ -13,7 +13,7 @@ const { tokenValidationMiddleware } = require('../middlewares/user');
  *@route /users/signup
  *@method POST
  */
-router.post('/signUp', checkIsUserValidMiddleware, userController.signUp);
+router.post('/register', checkIsUserValidMiddleware, userController.register);
 
 // Update user by id
 /**

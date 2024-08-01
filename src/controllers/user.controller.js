@@ -9,7 +9,7 @@ const { userService } = require('../services/');
  * @return {Object} - Returns a success message if the user is created successfully.
  */
 
-exports.signUp = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const { email, password, ...rest } = req.body;
     // Check if user already exists

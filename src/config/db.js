@@ -22,11 +22,13 @@ const connectToDb = async () => {
   mongoose.connection.on('disconnected', () => {
     console.log('Mongoose default connection disconnected');
   });
-  
+
   process.on('SIGINT', async () => {
     try {
       await mongoose.connection.close();
-      console.log('Mongoose default connection disconnected through app termination');
+      console.log(
+        'Mongoose default connection disconnected through app termination',
+      );
       process.exit(0);
     } catch (error) {
       console.error('Error during disconnection:', error);

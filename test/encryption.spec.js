@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const { hashing} = require('../src/helpers');
+const { hashing } = require('../src/helpers');
 
 describe('Hashing password', function () {
   let hashedResult;

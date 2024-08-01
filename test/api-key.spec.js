@@ -7,13 +7,13 @@ const apiKeyMiddleware = require('../src/middlewares/API/api-key.middleware');
 
 describe('apiKeyMiddleware', () => {
   let apiKey;
-  
-  before(async function() {
+
+  before(async function () {
     apiKey = process.env.API_KEY;
   });
-  
+
   it('should call next if API key is valid', () => {
-    const req = { get: () => apiKey};
+    const req = { get: () => apiKey };
     const res = {};
     const next = () => {};
 

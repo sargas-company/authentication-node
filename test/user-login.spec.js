@@ -4,15 +4,15 @@ const app = require('../src');
 const fs = require('fs');
 const request = require('supertest')(app);
 const authService = require('../src/services/user.service');
-const {hashPassword} = require("../src/helpers/encryption");
+const { hashPassword } = require('../src/helpers/encryption');
 
 describe('POST /', function () {
   let apiKey;
-  
-  before(async function() {
+
+  before(async function () {
     apiKey = process.env.API_KEY;
   });
-  
+
   it('should return 400 if email or password is missing', function (done) {
     request
       .post('/auth/login')
@@ -67,7 +67,7 @@ describe('POST /', function () {
       })
       .expect(200);
     // Remove the test user from the database
-    
+
     await authService.delete(testUser._id);
     // Assert that the response contains access and refresh tokens
     expect(res.body.accessToken).to.be.a('string');

@@ -4,14 +4,14 @@ const request = require('supertest');
 const app = require('../src');
 const authService = require('../src/services/user.service');
 
-describe('User Routes', function() {
+describe('User Routes', function () {
   describe('POST /users/register', () => {
     let apiKey;
-    
-    before(async function() {
+
+    before(async function () {
       apiKey = process.env.API_KEY;
     });
-    
+
     it('should return 201 status and success message when user is created', async () => {
       const newUser = {
         username: 'newuser',
@@ -24,13 +24,13 @@ describe('User Routes', function() {
         .post('/users/register')
         .set('x-api-key', apiKey)
         .send(newUser);
-      
+
       const newUserFromDB = await authService.findOneByParam({
         email: newUser.email,
       });
-      
+
       await authService.delete(newUserFromDB._id);
-      
+
       expect(res.status).to.equal(201);
       expect(res.body.message).to.equal('User created successfully');
     });

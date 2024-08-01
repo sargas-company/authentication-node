@@ -2,8 +2,8 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const { generateToken, verifyToken } = require('../src/helpers');
-const { ACCESS_TOKEN_SECRET } = require("../src/config/constants");
-const {RoleEnum, ActionEnum} = require("../src/constants");
+const { ACCESS_TOKEN_SECRET } = require('../src/config/constants');
+const { RoleEnum, ActionEnum } = require('../src/constants');
 
 const sleep = async (milliseconds) => {
   await new Promise((resolve) => {
@@ -20,16 +20,16 @@ describe('jwtUtils', () => {
     expect(token.accessToken).to.be.a('string');
     expect(token.refreshToken).to.be.a('string');
   });
-  
+
   it('should verify a valid JWT token and userid is same to 123.', async () => {
     const user = { id: '123', role: RoleEnum.USER };
     const action = ActionEnum.LOGIN;
     const { accessToken } = await generateToken({ user, action });
-    const decodedData = await verifyToken(ActionEnum.USER_ACCESS,accessToken);
+    const decodedData = await verifyToken(ActionEnum.USER_ACCESS, accessToken);
     expect(decodedData.userId).to.equal('123');
   });
-  
-  it('should output jwt expired message.', async  () => {
+
+  it('should output jwt expired message.', async () => {
     const user = { id: '123', role: RoleEnum.USER };
     const action = ActionEnum.LOGIN;
     const { accessToken } = generateToken({ user, action });

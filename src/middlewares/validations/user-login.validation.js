@@ -5,7 +5,9 @@ const { emailPasswordValidator } = require('../../validators');
  */
 
 function userLoginValidation(req, res, next) {
-  const { error } = emailPasswordValidator.validate(req.body, { abortEarly: false });
+  const { error } = emailPasswordValidator.validate(req.body, {
+    abortEarly: false,
+  });
 
   if (error) {
     const errors = error.details.map((e) => e.message);

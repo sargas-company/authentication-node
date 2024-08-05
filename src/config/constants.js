@@ -40,9 +40,11 @@ module.exports = {
     preflightContinue: true,
     credentials: true,
   },
-
-  EMAIL_DOMAIN: process.env.EMAIL_DOMAIN || 'example.com',
-  EMAIL_API_KEY: process.env.EMAIL_API_KEY || '',
+  
+  EMAIL_HOST: process.env.EMAIL_HOST || '',
+  EMAIL_PORT: process.env.EMAIL_PORT || '',
+  EMAIL_USER: process.env.EMAIL_USER || '',
+  EMAIL_PASS: process.env.EMAIL_PASS || '',
 
   userLock: {
     attemptNumber: 5,

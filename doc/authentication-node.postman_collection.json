@@ -375,7 +375,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\r\n    \"password\": \"qwe123QWE\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -383,14 +383,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/auth/update-password/token",
+					"raw": "{{base_url}}/auth/update-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJJZCI6IjY2YjA5YTBhODM0MTAxN2M2YWMwNmQ4NiIsImlhdCI6MTcyMjg1MjUzNSwiZXhwIjoxNzIyODU2MTM1fQ.3Yni9IuE0pjk_4aI8CT8DFg24DVJUImzLG_nQCPr2s0",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"auth",
 						"update-password",
-						"token"
+						"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJJZCI6IjY2YjA5YTBhODM0MTAxN2M2YWMwNmQ4NiIsImlhdCI6MTcyMjg1MjUzNSwiZXhwIjoxNzIyODU2MTM1fQ.3Yni9IuE0pjk_4aI8CT8DFg24DVJUImzLG_nQCPr2s0"
 					]
 				}
 			},

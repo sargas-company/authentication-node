@@ -128,14 +128,18 @@ exports.resetPassword = async (req, res) => {
   }
 
   const existingUser = await userService.findOneByParam({ email });
+  
+  if (!existingUser) {
+    return res.status(404).send({ message: 'User not found' });
+  }
 
   const resetPasswordToken = await tokenGenerator.generateToken({
     user: existingUser,
     action: ActionEnum.RESET_PASSWORD,
   });
 
-  const message = `<html>To reset your password, <a href="${constants.BASE_URL}/reset_password/${resetPasswordToken}">click here</a>.</html>`;
-  const isMailSent = await transferMail(
+  const message = `<html>To reset your password, <a href="${constants.BASE_URL}/update-password/${resetPasswordToken}">click here</a>.</html>`;
+  const isMailSent = transferMail(
     email,
     MailTitle.RESET_PASSWORD,
     message,

@@ -54,13 +54,11 @@ To access the API, include the `x-api-key` header in your requests. The key valu
 
 Here's how to make a login request using `curl`:
 
-    ```bash
     curl -X POST \
          -H "x-api-key: your-api-key" \
          -H "Content-Type: application/json" \
          -d '{"email": "user@example.com", "password": "password123"}' \
          http://localhost:5000/auth/login
-    ```
 
 ## Features
 
@@ -84,7 +82,6 @@ Allows users to reset their passwords via email.
 
 The project is organized as follows:
 
-    ```
     ├── doc
     │   └── authentication-node.postman_collection.json # Postman collection   
     ├── src
@@ -105,7 +102,6 @@ The project is organized as follows:
     ├── .prettierrc      # Prettier configuration
     ├── package.json     # NPM dependencies and scripts 
     └── README.md        # Project documentation
-    ```
 
 ## Built With
 

@@ -1,10 +1,15 @@
 const { updatedUserValidator } = require('../../validators');
 
 /**
- Validates the request body for user update.
+ * Middleware function to validate the request body for user update.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.body - The request body containing the updated user data.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function in the chain.
+ * @returns {Object} - The HTTP response object with a status code and errors if the validation fails, otherwise the next function in the middleware chain is called.
  */
-
-function validateUpdatedUser(req, res, next) {
+const validateUpdatedUser = (req, res, next) => {
   const { error } = updatedUserValidator.validate(req.body);
 
   if (error) {
@@ -12,6 +17,6 @@ function validateUpdatedUser(req, res, next) {
     return res.status(400).json({ errors });
   }
   next();
-}
+};
 
 module.exports = validateUpdatedUser;

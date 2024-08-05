@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { RoleEnum, TwoFactorAuthEnum } = require('../constants');
 
 const Schema = mongoose.Schema;
-const userScheme = new Schema(
+const userSchema = new Schema(
   {
     username: String,
     email: String,
@@ -24,4 +24,4 @@ const userScheme = new Schema(
   },
   { versionKey: false },
 );
-module.exports = mongoose.model('User', userScheme);
+module.exports = mongoose.model('User', userSchema);

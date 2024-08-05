@@ -3,12 +3,41 @@ const { hashPassword } = require('../helpers/encryption');
 const { userService } = require('../services/');
 
 /**
- * @desc This function creates a new user record and returns a success message.
- * @param {Object} req - The request object containing the user data in the body.
- * @param {Object} res - The response object to send back success or error messages.
- * @return {Object} - Returns a success message if the user is created successfully.
+ * @desc Retrieves a user by their ID.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The request parameters.
+ * @param {string} req.params.userId - The ID of the user to retrieve.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>}
  */
+exports.get = async (req, res) => {
+  try {
+    const { userId } = req;
 
+    if (!userId) {
+      return res.status(400).send('No user ID provided.');
+    }
+
+    const user = await userService.findOneByParam({ _id: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'No user found' });
+    }
+
+    res.json({ message: 'User retrieved successfully', data: user });
+  } catch (e) {
+    console.error('Error during getting user:', e);
+    res.sendStatus(500);
+  }
+};
+/**
+ * @desc This function creates a new user record and returns a success message.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - Returns a success message if the user is created successfully.
+ */
 exports.register = async (req, res) => {
   try {
     const { email, password, ...rest } = req.body;
@@ -31,10 +60,10 @@ exports.register = async (req, res) => {
 };
 
 /**
- Update user by id
- @param {object} req.body - The user data to update
- @param {string} req.userId - The ID of the user to update
- @returns {object} - Returns a success message if the user is updated.
+ * Update user by id
+ * @param {object} req.body - The user data to update
+ * @param {string} req.userId - The ID of the user to update
+ * @return {object} - Returns a success message if the user is updated.
  */
 exports.update = async (req, res) => {
   try {
@@ -61,9 +90,9 @@ exports.update = async (req, res) => {
 };
 
 /**
- Delete user by ID.
- @throws {Error} - Throws an error if there's an issue deleting the user or if the user is an admin.
- @returns {object} - Returns a success message if the user is deleted.
+ * Delete user by ID.
+ * @throws {Error} - Throws an error if there's an issue deleting the user or if the user is an admin.
+ * @return {object} - Returns a success message if the user is deleted.
  */
 exports.delete = async (req, res) => {
   try {

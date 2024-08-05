@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 const constants = require('../config/constants');
 const { ActionEnum } = require('../constants');
+const { userService } = require('../services');
 
 /**
- *
  * @desc This function generates access token and refresh token
  * @param {Object} data object that containing user information - email, role, ...
  * @returns access and refresh tokens
  */
-async function generateToken(data) {
+const generateToken = async (data) => {
   const { user, action } = data;
   const { role } = user;
 
@@ -42,6 +42,35 @@ async function generateToken(data) {
       expiresIn: resetPasswordTokenExpiresIn,
     });
   }
-}
+};
 
-module.exports = generateToken;
+/**
+ * Generates access and refresh tokens for a user and saves the refresh token to the user's record.
+ *
+ * @param {User} user - The user object for which tokens are to be generated.
+ * @param {string} user.id - The ID of the user.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing the generated access and refresh tokens.
+ * @property {string} accessToken - The generated access token.
+ * @property {string} refreshToken - The generated refresh token.
+ */
+const generateAndSaveTokens = async (user) => {
+  const { accessToken, refreshToken } = await generateToken({
+    user,
+    action: ActionEnum.LOGIN,
+  });
+
+  // Update the user with the new refresh token
+  await userService.updateById({
+    id: user.id,
+    params: {
+      refreshToken,
+    },
+  });
+
+  return { accessToken, refreshToken };
+};
+
+module.exports = {
+  generateToken,
+  generateAndSaveTokens,
+};

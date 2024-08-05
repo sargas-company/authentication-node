@@ -7,7 +7,13 @@ const {
 } = require('../middlewares/validations');
 const { tokenValidationMiddleware } = require('../middlewares/user');
 
-// Create new user
+/**
+ *@desc get user
+ *@route /users/:userId
+ *@method GET
+ */
+router.get('/', tokenValidationMiddleware, userController.get);
+
 /**
  *@desc new user creation
  *@route /users/signup
@@ -15,7 +21,6 @@ const { tokenValidationMiddleware } = require('../middlewares/user');
  */
 router.post('/register', checkIsUserValidMiddleware, userController.register);
 
-// Update user by id
 /**
  *@desc updating user
  *@route /users
@@ -28,7 +33,6 @@ router.patch(
   userController.update,
 );
 
-// Delete user by id
 /**
  *@desc hard deleting user
  *@route /users

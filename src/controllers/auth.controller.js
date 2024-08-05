@@ -2,18 +2,23 @@ const { transferMail } = require('../config/email.js');
 const { hashPassword } = require('../helpers/encryption');
 const { MailTitle } = require('../constants/');
 const constants = require('../config/constants');
-const { generateToken, calculateTimeInterval } = require('../helpers');
+const {
+  tokenGenerator,
+  calculateTimeInterval,
+  loginLogHelper,
+} = require('../helpers');
 const { userService } = require('../services/');
-const { loginLogService } = require('../services/');
 const { verifyPassword } = require('../helpers/encryption');
 const { verifyToken } = require('../helpers');
 const { ActionEnum } = require('../constants');
 
 /**
- @desc This function handles user login and returns access and refresh tokens.
- @return {Object} - Returns access and refresh tokens if the user is authenticated.
+ * Login
+ * @desc This function handles user login and returns access and refresh tokens.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @return {Object} - Returns access and refresh tokens if the user is authenticated.
  */
-
 exports.login = async (req, res) => {
   // Destructure email and password from request body
   const { email, password } = req.body;
@@ -52,19 +57,20 @@ exports.login = async (req, res) => {
 
     if (!isPasswordValid) {
       // Log failed login attempt
-      await logFailedLoginAttempt(user, currentTime);
+      await loginLogHelper.logFailedLoginAttempt(user, currentTime);
 
       // Lock user if they exceed allowed attempts
-      await lockUserIfExceededAttempts(user, currentTime);
+      await loginLogHelper.lockUserIfExceededAttempts(user, currentTime);
 
       return res.status(401).send({ message: 'Invalid email or password' });
     }
 
     // Log successful login attempt and remove user lock
-    await logSuccessfulLoginAttempt(user, currentTime);
+    await loginLogHelper.logSuccessfulLoginAttempt(user, currentTime);
 
     // Generate access and refresh tokens, and update the user
-    const { accessToken, refreshToken } = await generateAndSaveTokens(user);
+    const { accessToken, refreshToken } =
+      await tokenGenerator.generateAndSaveTokens(user);
 
     // Send the access and refresh tokens in the response body
     res.send({ accessToken, refreshToken });
@@ -74,69 +80,6 @@ exports.login = async (req, res) => {
     res.sendStatus(500);
   }
 };
-
-async function logFailedLoginAttempt(user, currentTime) {
-  await loginLogService.create({
-    userId: user._id,
-    isSuccess: false,
-    regTime: currentTime,
-  });
-}
-
-async function lockUserIfExceededAttempts(user, currentTime) {
-  const comparedHoursAgoTime = new Date(
-    currentTime.getTime() - constants.userLock.lockPeriod * 60 * 1000,
-  );
-  const attemptFail = await loginLogService.find({
-    userId: user._id,
-    isSuccess: false,
-    regTime: {
-      $gte: comparedHoursAgoTime,
-      $lte: currentTime,
-    },
-  });
-  if (attemptFail.length === constants.userLock.attemptNumber - 1) {
-    await userService.updateById({
-      id: user.id,
-      params: {
-        isLock: true,
-        lockRegTime: currentTime,
-      },
-    });
-  }
-}
-
-async function logSuccessfulLoginAttempt(user, currentTime) {
-  await loginLogService.create({
-    userId: user._id,
-    isSuccess: true,
-    regTime: currentTime,
-  });
-  await userService.updateById({
-    id: user.id,
-    params: {
-      isLock: false,
-      $unset: { lockRegTime: 1 },
-    },
-  });
-}
-async function generateAndSaveTokens(user) {
-  // Generate access and refresh tokens
-  const { accessToken, refreshToken } = await generateToken({
-    user,
-    action: ActionEnum.LOGIN,
-  });
-
-  // Update the user with the new refresh token
-  await userService.updateById({
-    id: user.id,
-    params: {
-      refreshToken,
-    },
-  });
-
-  return { accessToken, refreshToken };
-}
 
 /**
  *
@@ -155,10 +98,11 @@ exports.refreshToken = async (req, res) => {
       return res.status(500).send({ message: 'User not found' });
     }
 
-    const { accessToken, refreshToken: newRefreshToken } = await generateToken({
-      user,
-      action: ActionEnum.LOGIN,
-    });
+    const { accessToken, refreshToken: newRefreshToken } =
+      await tokenGenerator.generateToken({
+        user,
+        action: ActionEnum.LOGIN,
+      });
 
     await userService.updateById(user.id, { refreshToken: newRefreshToken });
 
@@ -185,7 +129,7 @@ exports.resetPassword = async (req, res) => {
 
   const existingUser = await userService.findOneByParam({ email });
 
-  const resetPasswordToken = await generateToken({
+  const resetPasswordToken = await tokenGenerator.generateToken({
     user: existingUser,
     action: ActionEnum.RESET_PASSWORD,
   });

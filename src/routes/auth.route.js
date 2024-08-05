@@ -17,14 +17,14 @@ router.post('/login', userLoginValidation, authController.login);
  * @route /auth/refresh
  * @method POST
  */
-router.patch('/refresh', authController.refreshToken);
+router.post('/refresh', authController.refreshToken);
 
 /**
  * @desc This route handles send email with reset password link to users
  * @route /auth/resetPassword
  * @method POST
  */
-router.post('/resetPassword', authController.resetPassword);
+router.post('/reset-password', authController.resetPassword);
 
 /**
  * @desc This route handles update user password
@@ -32,7 +32,7 @@ router.post('/resetPassword', authController.resetPassword);
  * @method PATCH
  */
 router.patch(
-  '/updatePassword/:token',
+  '/update-password/:token',
   passwordValidation,
   authController.updatePassword,
 );
